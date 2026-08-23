@@ -1,0 +1,72 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "admin@example.com",
+      "password": "admin123",
+      "role": "admin"
+    },
+    {
+      "id": 2,
+      "email": "user@example.com",
+      "password": "user123",
+      "role": "user"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Setup Angular Project",
+      "description": "Initialize the task controlling application with Angular CLI",
+      "status": "completed",
+      "priority": "high",
+      "assignedTo": "admin",
+      "createdAt": "2024-08-10T10:00:00.000Z",
+      "startDeadline": "2024-08-13T10:00:00.000Z",
+      "deadline": "2024-08-17T10:00:00.000Z",
+      "updatedAt": "2024-08-15T10:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "title": "Implement Authentication",
+      "description": "Add login and authentication components with guards",
+      "status": "in-progress",
+      "priority": "high",
+      "assignedTo": "admin",
+      "createdAt": "2024-08-13T10:00:00.000Z",
+      "startDeadline": "2024-08-17T10:00:00.000Z",
+      "deadline": "2024-08-21T10:00:00.000Z",
+      "updatedAt": "2024-08-15T10:00:00.000Z"
+    },
+    {
+      "title": "Vasia do stuff",
+      "description": "Vasia ty cho",
+      "status": "pending",
+      "priority": "medium",
+      "assignedTo": "admin",
+      "startDeadline": "2026-08-17T00:00:00.000Z",
+      "deadline": "2026-08-26T00:00:00.000Z",
+      "createdAt": "2026-08-17T06:23:38.569Z",
+      "updatedAt": "2026-08-17T06:23:38.569Z",
+      "id": "BHjP4aY"
+    }
+  ],
+  "resources": [
+    {
+      "id": "1",
+      "type": "container",
+      "name": "Web Server 01",
+      "volumeValue": 500,
+      "volumeUnit": "cubic_meter",
+      "storageId": "stor-001"
+    },
+    {
+      "id": "2",
+      "type": "material",
+      "name": "PostgreSQL DB",
+      "volumeValue": 1024,
+      "volumeUnit": "cubic_meter",
+      "storageId": "stor-002"
+    }
+  ]
+}

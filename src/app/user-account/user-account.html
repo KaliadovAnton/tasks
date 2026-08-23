@@ -1,0 +1,52 @@
+<div class="user-account-container">
+  <header class="account-header">
+    <h1>User Account</h1>
+  </header>
+
+  @if (currentUser) {
+    <section class="user-info-section">
+      <h2>Account Information</h2>
+      <div class="user-info-card">
+        <div class="info-row">
+          <span class="info-label">User ID:</span>
+          <span class="info-value">{{ currentUser.id }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">First Name:</span>
+          <span class="info-value">{{ currentUser.firstName }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Last Name:</span>
+          <span class="info-value">{{ currentUser.lastName }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Username:</span>
+          <span class="info-value">{{ currentUser.username }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Email:</span>
+          <span class="info-value">{{ currentUser.email }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Department ID:</span>
+          <span class="info-value">{{ currentUser.departmentId }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Status:</span>
+          <span class="info-value status-badge status-{{ currentUser.status }}">{{ formatUserStatus(currentUser.status) }}</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="account-actions">
+      <button class="btn-primary" routerLink="/tasks">Go to Tasks</button>
+      <button class="btn-secondary" routerLink="/resources">Go to Resources</button>
+      <button class="btn-danger" (click)="logout()">Logout</button>
+    </section>
+  } @else {
+    <section class="no-user-section">
+      <p>No user information available. Please log in again.</p>
+      <button class="btn-primary" routerLink="/login">Go to Login</button>
+    </section>
+  }
+</div>

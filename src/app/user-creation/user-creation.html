@@ -1,0 +1,96 @@
+<div class="user-creation-container">
+  <header class="creation-header">
+    <h1>Create New User</h1>
+  </header>
+
+  <section class="create-user-section">
+    @if (errorMessage) {
+      <div class="error-message">
+        {{ errorMessage }}
+      </div>
+    }
+
+    <form class="user-form" (ngSubmit)="createUser()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="username">Username *</label>
+          <input 
+            type="text" 
+            id="username"
+            [(ngModel)]="newUsername" 
+            name="username"
+            placeholder="Enter username"
+            class="form-input"
+            required
+          >
+        </div>
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input 
+            type="email" 
+            id="email"
+            [(ngModel)]="newEmail" 
+            name="email"
+            placeholder="Enter email"
+            class="form-input"
+            required
+          >
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">First Name *</label>
+          <input 
+            type="text" 
+            id="firstName"
+            [(ngModel)]="newFirstName" 
+            name="firstName"
+            placeholder="Enter first name"
+            class="form-input"
+            required
+          >
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input 
+            type="text" 
+            id="lastName"
+            [(ngModel)]="newLastName" 
+            name="lastName"
+            placeholder="Enter last name"
+            class="form-input"
+          >
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="departmentId">Department ID</label>
+          <input 
+            type="text" 
+            id="departmentId"
+            [(ngModel)]="newDepartmentId" 
+            name="departmentId"
+            placeholder="e.g., dept-001"
+            class="form-input"
+          >
+        </div>
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select id="status" [(ngModel)]="newStatus" name="status" class="form-select">
+            <option value="planned">Planned</option>
+            <option value="ready">Ready</option>
+            <option value="in_work">In Work</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Create User</button>
+        <button type="button" class="btn-secondary" (click)="cancel()">Cancel</button>
+      </div>
+    </form>
+  </section>
+</div>

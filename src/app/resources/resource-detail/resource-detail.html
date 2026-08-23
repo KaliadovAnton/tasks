@@ -1,0 +1,99 @@
+<div class="resource-detail-container">
+  <header class="resource-detail-header">
+    <h1>Resource Details</h1>
+    <div class="header-actions">
+      @if (!isEditing) {
+        <button class="btn-primary" (click)="startEdit()">Edit Resource</button>
+      } @else {
+        <button class="btn-success" (click)="saveEdit()" [disabled]="editName === ''">Save</button>
+        <button class="btn-secondary" (click)="cancelEdit()">Cancel</button>
+      }
+      <button class="btn-secondary" (click)="goBack()">Back to Resources</button>
+    </div>
+  </header>
+
+  @if (loading) {
+    <p class="loading-message">Loading resource...</p>
+  } @else if (!resource) {
+    <p class="error-message">Resource not found.</p>
+  } @else {
+    <section class="resource-info-section">
+      <div class="resource-info-card">
+        <div class="info-row">
+          <span class="info-label">Resource ID:</span>
+          <span class="info-value">{{ resource.id }}</span>
+        </div>
+        
+        @if (isEditing) {
+          <div class="info-row edit-row">
+            <span class="info-label">Type:</span>
+            <span class="info-value">
+              <select [(ngModel)]="editType" class="form-select">
+                <option value="material">Material</option>
+                <option value="human resource">Human Resource</option>
+                <option value="container">Container</option>
+                <option value="heavy machinery">Heavy Machinery</option>
+                <option value="car">Car</option>
+                <option value="money">Money</option>
+              </select>
+            </span>
+          </div>
+          <div class="info-row edit-row">
+            <span class="info-label">Name:</span>
+            <span class="info-value">
+              <input type="text" [(ngModel)]="editName" class="form-input" placeholder="Resource name">
+            </span>
+          </div>
+          <div class="info-row edit-row">
+            <span class="info-label">Volume Value:</span>
+            <span class="info-value">
+              <input type="number" [(ngModel)]="editVolumeValue" class="form-input" placeholder="e.g., 500">
+            </span>
+          </div>
+          <div class="info-row edit-row">
+            <span class="info-label">Volume Unit:</span>
+            <span class="info-value">
+              <select [(ngModel)]="editVolumeUnit" class="form-select">
+                <option value="cubic_meter">cubic meter (m3)</option>
+                <option value="m3">m3</option>
+                <option value="square_meter">square meter (m2)</option>
+                <option value="m2">m2</option>
+                <option value="kilogram">kilogram (kg)</option>
+                <option value="kg">kg</option>
+                <option value="hour">hour (h)</option>
+                <option value="h">h</option>
+              </select>
+            </span>
+          </div>
+          <div class="info-row edit-row">
+            <span class="info-label">Storage ID:</span>
+            <span class="info-value">
+              <input type="text" [(ngModel)]="editStorageId" class="form-input" placeholder="Storage identifier">
+            </span>
+          </div>
+        } @else {
+          <div class="info-row">
+            <span class="info-label">Type:</span>
+            <span class="info-value"><span class="type-badge">{{ resource.type }}</span></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Name:</span>
+            <span class="info-value">{{ resource.name }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Volume Value:</span>
+            <span class="info-value">{{ resource.volumeValue }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Volume Unit:</span>
+            <span class="info-value"><span class="unit-badge">{{ formatVolumeUnitDisplay(resource.volumeUnit) }}</span></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Storage ID:</span>
+            <span class="info-value">{{ resource.storageId || 'Not specified' }}</span>
+          </div>
+        }
+      </div>
+    </section>
+  }
+</div>

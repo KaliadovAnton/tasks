@@ -1,0 +1,191 @@
+<div class="task-list-container">
+  <header class="task-header">
+    <h1>Task Control Application</h1>
+    <div class="user-info">
+      <a routerLink="/resources" class="btn-secondary">Go to Resources</a>
+      <span>Welcome, {{ currentUser }}</span>
+      <button class="btn-secondary" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <section class="add-task-section">
+    <h2>Add New Task</h2>
+    <div class="task-form">
+      <input 
+        type="text" 
+        [(ngModel)]="newTaskTitle" 
+        placeholder="Task title"
+        class="form-input"
+      >
+      <textarea 
+        [(ngModel)]="newTaskDescription" 
+        placeholder="Task description"
+        class="form-textarea"
+      ></textarea>
+      <div class="task-form-row">
+        <select [(ngModel)]="newTaskPriority" class="form-select priority-select">
+          <option value="low">Low Priority</option>
+          <option value="medium">Medium Priority</option>
+          <option value="high">High Priority</option>
+        </select>
+        <select [(ngModel)]="newTaskAssignedTo" class="form-select assignee-select">
+          <option value="">Unassigned</option>
+          @for (user of availableUsers; track user.id) {
+            <option [value]="user.username">{{ user.username }}</option>
+          }
+        </select>
+      </div>
+      <div class="task-form-row">
+        <div class="form-group-date">
+          <label>Must start by:</label>
+          <input 
+            type="date" 
+            [(ngModel)]="newTaskStartDeadline" 
+            class="form-input"
+          >
+        </div>
+        <div class="form-group-date">
+          <label>Final deadline:</label>
+          <input 
+            type="date" 
+            [(ngModel)]="newTaskDeadline" 
+            class="form-input"
+          >
+        </div>
+      </div>
+      <button class="btn-primary" (click)="addTask()">Add Task</button>
+    </div>
+  </section>
+
+  <section class="tasks-section">
+    <h2>Tasks</h2>
+    
+    @if (tasks.length === 0) {
+      <p class="no-tasks">No tasks found. Add a new task to get started!</p>
+    } @else {
+      <div class="task-list">
+        @for (task of tasks; track task.id) {
+          <div class="task-card" [style.borderLeft]="'4px solid ' + getPriorityColorDisplay(task.priority)" (click)="navigateToTaskDetail(task.id)">
+            <div class="task-header-row">
+              <h3>{{ task.title }}</h3>
+              <div class="priority-actions-row">
+                <span class="priority-badge" [style.backgroundColor]="getPriorityColorDisplay(task.priority)">
+                  {{ task.priority }}
+                </span>
+                <button class="btn-secondary toggle-details-btn" (click)="toggleTaskDetails(task.id); $event.stopPropagation()" title="Toggle details panel">
+                  {{ expandedTaskId === task.id ? 'Hide Details' : 'Show Details' }}
+                </button>
+              </div>
+            </div>
+            
+            <p class="task-description">{{ task.description || 'No description provided' }}</p>
+            
+            <div class="task-meta">
+              <span class="status-badge" [style.backgroundColor]="getStatusColorDisplay(task.status)">
+                {{ task.status }}
+              </span>
+              @if (isPastStartDeadlineDisplay(task)) {
+                <span class="warning-badge">Start deadline passed!</span>
+              }
+              @if (isPastDeadlineDisplay(task)) {
+                <span class="danger-badge">Deadline passed!</span>
+              }
+              <div class="dates-control">
+                <small>Created: {{ formatDateDisplay(task.createdAt) }}</small>
+                @if (task.startDeadline) {
+                  <small>Must start by: {{ formatDateDisplay(task.startDeadline) }}</small>
+                }
+                @if (task.deadline) {
+                  <small>Final deadline: {{ formatDateDisplay(task.deadline) }}</small>
+                }
+              </div>
+              <div class="assignee-control">
+                <label class="assignee-label">Assign to:</label>
+                <select (change)="reassignTask(task.id, $any($event.target).value)" (click)="$event.stopPropagation()" class="form-select assignee-select">
+                  <option value="">Unassigned</option>
+                  @for (user of availableUsers; track user.id) {
+                    <option [value]="user.username" [selected]="task.assignedTo === user.username">{{ user.username }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </section>
+
+  <!-- Right Side Task Details Panel -->
+  @if (expandedTaskId) {
+    <div class="details-panel-overlay" (click)="expandedTaskId = null"></div>
+    <div class="details-panel">
+      <div class="details-panel-header">
+        <h2>Task Details</h2>
+        <button class="btn-secondary close-panel-btn" (click)="expandedTaskId = null">×</button>
+      </div>
+      
+      @if (expandedTask) {
+        <div class="details-panel-content">
+          <div class="detail-row header-info-row">
+            <div class="task-title-section-detail">
+              <h3>{{ expandedTask.title }}</h3>
+              <span class="priority-badge" [style.backgroundColor]="getPriorityColorDisplay(expandedTask.priority)">
+                {{ expandedTask.priority }}
+              </span>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <span class="detail-label">Status:</span>
+            <span class="detail-value">
+              <span class="status-badge" [style.backgroundColor]="getStatusColorDisplay(expandedTask.status)">
+                {{ expandedTask.status }}
+              </span>
+            </span>
+          </div>
+
+          @if (isPastStartDeadlineDisplay(expandedTask)) {
+            <div class="detail-row warning-row">
+              <span class="warning-badge">Start deadline passed!</span>
+            </div>
+          }
+          
+          @if (isPastDeadlineDisplay(expandedTask)) {
+            <div class="detail-row danger-row">
+              <span class="danger-badge">Deadline passed!</span>
+            </div>
+          }
+
+          <div class="detail-row">
+            <span class="detail-label">Description:</span>
+            <span class="detail-value">{{ expandedTask.description || 'No description provided' }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="detail-label">Assigned To:</span>
+            <span class="detail-value">{{ expandedTask.assignedTo || 'Unassigned' }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="detail-label">Created At:</span>
+            <span class="detail-value">{{ formatDateDisplay(expandedTask.createdAt) }}</span>
+          </div>
+
+          @if (expandedTask.startDeadline) {
+            <div class="detail-row">
+              <span class="detail-label">Must Start By:</span>
+              <span class="detail-value">{{ formatDateDisplay(expandedTask.startDeadline) }}</span>
+            </div>
+          }
+
+          @if (expandedTask.deadline) {
+            <div class="detail-row">
+              <span class="detail-label">Final Deadline:</span>
+              <span class="detail-value">{{ formatDateDisplay(expandedTask.deadline) }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

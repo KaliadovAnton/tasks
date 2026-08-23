@@ -1,0 +1,102 @@
+<div class="task-detail-container">
+  <header class="task-detail-header">
+    <h1>Task Details</h1>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="goBack()">Back to Tasks</button>
+    </div>
+  </header>
+
+  @if (loading) {
+    <p class="loading-message">Loading task...</p>
+  } @else if (!task) {
+    <p class="error-message">Task not found.</p>
+  } @else {
+    <section class="task-info-section">
+      <div class="task-info-card" [style.borderLeft]="'4px solid ' + getPriorityColorDisplay(task.priority)">
+        <div class="info-row header-info">
+          <div class="task-title-section">
+            <h2>{{ task.title }}</h2>
+            <span class="priority-badge" [style.backgroundColor]="getPriorityColorDisplay(task.priority)">
+              {{ task.priority }}
+            </span>
+          </div>
+        </div>
+        
+        <div class="info-row">
+          <span class="info-label">Status:</span>
+          <span class="info-value">
+            <span class="status-badge" [style.backgroundColor]="getStatusColorDisplay(task.status)">
+              {{ task.status }}
+            </span>
+          </span>
+        </div>
+
+        @if (isPastStartDeadlineDisplay(task)) {
+          <div class="info-row warning-row">
+            <span class="warning-badge">Start deadline passed!</span>
+          </div>
+        }
+        
+        @if (isPastDeadlineDisplay(task)) {
+          <div class="info-row danger-row">
+            <span class="danger-badge">Deadline passed!</span>
+          </div>
+        }
+
+        <div class="info-row">
+          <span class="info-label">Description:</span>
+          <span class="info-value">{{ task.description || 'No description provided' }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Assigned To:</span>
+          <span class="info-value">{{ task.assignedTo || 'Unassigned' }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="info-label">Created At:</span>
+          <span class="info-value">{{ formatDateDisplay(task.createdAt) }}</span>
+        </div>
+
+        @if (task.startDeadline) {
+          <div class="info-row">
+            <span class="info-label">Must Start By:</span>
+            <span class="info-value">{{ formatDateDisplay(task.startDeadline) }}</span>
+          </div>
+        }
+
+        @if (task.deadline) {
+          <div class="info-row">
+            <span class="info-label">Final Deadline:</span>
+            <span class="info-value">{{ formatDateDisplay(task.deadline) }}</span>
+          </div>
+        }
+
+        <div class="info-row action-row">
+          <div class="task-actions">
+            @if (task.status !== 'completed') {
+              <button 
+                class="btn-success" 
+                (click)="updateTaskStatus('in-progress')"
+                [disabled]="task.status === 'in-progress'"
+              >
+                Start
+              </button>
+            }
+            
+            @if (task.status === 'in-progress') {
+              <button 
+                class="btn-success" 
+                (click)="updateTaskStatus('completed')"
+              >
+                Complete
+              </button>
+            }
+            
+            <button class="btn-danger" (click)="deleteTask()">Delete</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  }
+</div>
