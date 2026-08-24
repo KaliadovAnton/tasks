@@ -9,6 +9,19 @@ const router = jsonServer.router(path.join(__dirname, 'db.json'));
 // Apply default middlewares first (includes bodyParser, cors, logger, etc.)
 server.use(middlewares);
 
+// Middleware to set XSRF-TOKEN cookie for CSRF protection
+server.use((req, res, next) => {
+  // Check if XSRF-TOKEN cookie is already present in the request cookies
+  const cookieHeader = req.headers.cookie || '';
+  if (!cookieHeader.includes('XSRF-TOKEN=')) {
+    // Generate a simple token
+    const xsrfToken = 'mock-xsrftoken-' + Date.now() + '-' + Math.random().toString(36).substring(2, 15);
+    // Set the cookie (not httpOnly so Angular can read it)
+    res.setHeader('Set-Cookie', `XSRF-TOKEN=${xsrfToken}; Path=/; SameSite=Lax`);
+  }
+  next();
+});
+
 // Login route - ensure body is parsed
 server.post('/login', express.json(), (req, res) => {
   const dbPath = path.join(__dirname, 'db.json');
